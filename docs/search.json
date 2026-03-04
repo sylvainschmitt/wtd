@@ -1,0 +1,93 @@
+[
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "WTD",
+    "section": "",
+    "text": "Introduction\nQuick exploration of INPA literature on water table depth (WTD) to build a small project for a 2 month mobility."
+  },
+  {
+    "objectID": "index.html#poeple",
+    "href": "index.html#poeple",
+    "title": "WTD",
+    "section": "Poeple",
+    "text": "Poeple\n\nSylvain Schmitt (sylvain.schmitt@cirad.fr)"
+  },
+  {
+    "objectID": "11_Ducke.html",
+    "href": "11_Ducke.html",
+    "title": "Ducke",
+    "section": "",
+    "text": "Code\nlibrary(tidyverse)\ntrees &lt;- readxl::read_xlsx(\"data/raw_data/ducke/ducke_arvores_20140214_corr_pom_planilha de trabalho.xlsx\") %&gt;% \n  select(especie,   numero, parcela,    x,  y,  lado) %&gt;% \n  rename(species = especie, id = numero, plot = parcela, side = lado) %&gt;% \n  separate(species, c(\"genus\", \"species\")) %&gt;% \n  filter(!(species %in% c(\"na\", \"indet\")))\nplots &lt;- readxl::read_xls(\"data/raw_data/ducke/plotsducke_ambientes_completo2.xls\", 2)\nenv &lt;- readxl::read_xlsx(\"data/raw_data/ducke/Species Weighted Averages.xlsx\", 2) %&gt;% \n  select(Especie, hand.mean) %&gt;% \n  rename(species = Especie, hand = hand.mean) %&gt;% \n  separate(species, c(\"genus\", \"species\")) %&gt;% \n  filter(!(species %in% c(\"na\", \"indet\")))\n\n\n\n\nCode\ntrees %&gt;% \n  group_by(genus, species) %&gt;% \n  summarise(abundance = n()) %&gt;% \n  arrange(desc(abundance)) %&gt;% \n  ungroup() %&gt;% \n  mutate(rank = 1:n()) %&gt;% \n  ggplot(aes(rank, abundance)) +\n  geom_line() +\n  theme_bw() +\n  scale_y_log10() +\n  scale_x_log10() +\n  xlab(\"Rank\") +\n  ylab(\"Abundance\")\n\n\n\n\n\nCaption.\n\n\n\n\n\n\nCode\ntrees %&gt;% \n  group_by(genus, species) %&gt;% \n  summarise(abundance = n()) %&gt;% \n  left_join(env) %&gt;% \n  ggplot(aes(hand, abundance)) +\n  geom_point() +\n  theme_bw() +\n  scale_y_log10() +\n  xlab(\"Abundance\") +\n  ylab(\"Mean Hieght Above Nearest Drainage [HAND, m]\")\n\n\n\n\n\nCaption."
+  },
+  {
+    "objectID": "91_literature.html#costa2022",
+    "href": "91_literature.html#costa2022",
+    "title": "Literature",
+    "section": "Flavia R. C. Costa et al. (2022)",
+    "text": "Flavia R. C. Costa et al. (2022)\nAbstract:\n\nTropical forest function determined by water availability\nGroundwater related to soil water through the water table depth (WT)\nShallow WT forests (WT &lt; 5 m) underrepresented in research\nShallow WT ~50% Amazon & different response CC droughts\nReview WT patterns and consequences + conceptual model (env, traits, CC)\nShallow WT distinct composition: resource-acquisitive, hydrologically vulnerable, shorter canopies and lower biomass.\n‘normal’ years shallow WT forests have higher mortality and lower productivity\nmoderate droughts mortality is buffered and productivity increases\nsevere drought more sensitive due to shallow roots and drought-intolerant traits?\n\nNotes:\n\nlack of WT variations in Dynamic Vegetation Models\nForest dyn | CC ~ f( WT x Clim x FT)\nTo sim Delta WT TROLL needs stomatal control improvement that we plan to dev for rainfall exclusion experiment\nShallow WT results in shallower roots due to hypoxia or anoxia (to dev)\nLow runoff in the Amazon with ref\nWt driven by topo x clim\nCapillary water uprise can go from &lt;1m in sand to few metres in clay\nAnoxic conditions &gt; from root respiration to alcoholic fermentation &gt; 1 vs 36 ATP prod per glycose &gt; limit root growth &gt; reduce root permeability &gt; reduce stomatal conductance &gt; reduce photosysnthesis\nAnoxic conditions &gt; reduce available nitrogen\nShallower roots &gt; higher uprooting\nAgenda: (1) understanding shallow WT productivity shifts, (2) explore a potential tipping point, (3) link WTD, WUE, CO2 enrichment and phosphorous availability, (4) predict forest responses to CC with field and remote sensing data"
+  },
+  {
+    "objectID": "91_literature.html#aleixo2019",
+    "href": "91_literature.html#aleixo2019",
+    "title": "Literature",
+    "section": "Aleixo et al. (2019)",
+    "text": "Aleixo et al. (2019)\nAbstract:\n\nIncreasing mortality in tropical moist forests\nImportance of climate and speceis traits evaluated with survival &gt;1,000 trees, &gt;200 species, &gt;50year in the Central Amazon\nDrought, heat, storms and extreme rainy years increase mortality to at least two years\nPioneers, softwoods and evergreens are especially sensitive\nThis may result in faster carbon sequestration but lower carbon storage"
+  },
+  {
+    "objectID": "91_literature.html#cosme2017",
+    "href": "91_literature.html#cosme2017",
+    "title": "Literature",
+    "section": "Cosme et al. (2017)",
+    "text": "Cosme et al. (2017)\nAbstract:\n\nlocal filtering of species link to hydraulic architectural traits?\nhydrological microhabitat partitioning?\nhydraulic characteristics at tissue (anatomical traits, wood specific gravity (WSG)), organ (leaf area, specific leaf area (SLA), leaf area : sapwood area ratio) and whole-plant (height) levels for 28 pairs of congeneric species specialized in valleys or plateaus\nOn plateaus, higher WSG, lower mean vessel area, mean vessel hydraulic diameter, sapwood area and SLA; traits commonly associated with hydraulic safety\n2 strategies for either efficiency or safety were detected, based on vessel size or allocation to sapwood"
+  },
+  {
+    "objectID": "91_literature.html#effects2020",
+    "href": "91_literature.html#effects2020",
+    "title": "Literature",
+    "section": "Flávia Regina Capellotto Costa et al. (2020)",
+    "text": "Flávia Regina Capellotto Costa et al. (2020)\nAbstract:\n\n20-year monitoring of 6 biological groups over 100 km2 at Ducke\ndecrease in abundance (9 – 35 %) and richness (8 – 25 %) along time, with some taxonomic and functional reorganization\nmore extensive changes in the valleys for trees and ants, and in first-order streams for fish\nbird and small trees had different patterns of composition change in valleys and plateaus\nforest and streams are becoming more dynamic as the hydrological cycle intensifies due to climate changes\nsuggest riparian areas in the valleys are hydrological refuges during droughts"
+  },
+  {
+    "objectID": "91_literature.html#decastilho2006",
+    "href": "91_literature.html#decastilho2006",
+    "title": "Literature",
+    "section": "Castilho et al. (2006)",
+    "text": "Castilho et al. (2006)\nAbstract:\n\n72 1-ha plots tree and palm AGB ~ soil gradients (texture & nutrients) and topography (altitude & slope)\n8% to 98% sand, slopes 0.5° to 27°, altitude range 70m\nAGB (palm+trees&gt;1cm) 327.8 Mg/ha (210.9-426.3)\ntwo-fold variation among plots, soil or topography explaining 20%\nAGB ~ +%clay +altitude !=slope\nslope explained 14% of the AGB in understory & emergent"
+  },
+  {
+    "objectID": "91_literature.html#decastilho2010",
+    "href": "91_literature.html#decastilho2010",
+    "title": "Literature",
+    "section": "Castilho et al. (2010)",
+    "text": "Castilho et al. (2010)\nAbstract:\n\n72 1-ha plots over 2-yr: soil & topographic ~ AGB change\nAGB increased over 2-yr 1.65 Mg/ha/yr (1.15-2.79)\nunderstory & sub-canopy higher rates\nrate != soil or topography but ~ year of measurement"
+  },
+  {
+    "objectID": "91_literature.html#esteban2020",
+    "href": "91_literature.html#esteban2020",
+    "title": "Literature",
+    "section": "Esteban et al. (2020)",
+    "text": "Esteban et al. (2020)\nAbstract:\n\nDemography 30 abundant tree species &gt;20years, impacts of droughts & extreme wet periods, and topograpy (shallow to deep WT) with functional traits on climate effects\nDry & wet extremes ~ -growth +mortality. But higher impact of interaction.\nDespite more drought-tolerant, species deep WT were more negatively affected than hydraulically vulnerable species shallow WT.\nInteraction of wet–dry extremes and WT depth modulated tree responses to climate, providing buffers to droughts in Amazonia."
+  },
+  {
+    "objectID": "91_literature.html#garcia2021",
+    "href": "91_literature.html#garcia2021",
+    "title": "Literature",
+    "section": "Garcia et al. (2021)",
+    "text": "Garcia et al. (2021)\nAbstract:\n\nITV LMA, WD, xylem embolism resistance 2 dominant species along water and light availability accounting tree age and height.\nITV hydraulic ~ community variation\nITV hydraulic ~ hydrological env, +embolism resistance in deep than shallow WT\nITV LMA & WD ~ age, height, light\nuncoupled coordination among carbon acquisition/conservation and water-use traits"
+  },
+  {
+    "objectID": "91_literature.html#toledo2016",
+    "href": "91_literature.html#toledo2016",
+    "title": "Literature",
+    "section": "Toledo et al. (2016)",
+    "text": "Toledo et al. (2016)\nAbstract:\n\nsoil, species composition, and trait distribution among 72 1-ha plots with fixed climate and control soil with plots design\nSoil =&gt; composition shift =&gt; CWM WD\n(40% AGB, 24% mortality, 18% coarse wood production) ~ clay, CEC, CWM WD, NMDS1\nLower biomass and higher mortality on sandy soils is a consequence of dominance of species with low to medium wood density adapted to waterlogged and nutrient-poor sandy soils.\nMesoscale variation in biomass and dynamics is caused by co-occurrence of species with similar traits in different parts of the edaphic gradient\n\n\n\n\n\nAleixo, Izabela, Darren Norris, Lia Hemerik, Antenor Barbosa, Eduardo Prata, Flávia Costa, and Lourens Poorter. 2019. “Amazonian Rainforest Tree Mortality Driven by Climate and Functional Traits.” Nature Climate Change 9 (5): 384–88. https://doi.org/10.1038/s41558-019-0458-0.\n\n\nCastilho, Carolina V. de, William E. Magnusson, R. Nazaré O. de Araújo, and Flávio J. Luizão. 2010. “Short-Term Temporal Changes in Tree Live Biomass in a Central Amazonian Forest, Brazil.” Biotropica 42 (1): 95–103. https://doi.org/10.1111/j.1744-7429.2009.00543.x.\n\n\nCastilho, Carolina V. de, William E. Magnusson, R. Nazaré O. de Araújo, Regina C. C. Luizão, Flávio J. Luizão, Albertina P. Lima, and Niro Higuchi. 2006. “Variation in Aboveground Tree Live Biomass in a Central Amazonian Forest: Effects of Soil and Topography.” Forest Ecology and Management 234 (1-3): 85–96. https://doi.org/10.1016/j.foreco.2006.06.024.\n\n\nCosme, Luiza H. M., Juliana Schietti, Flávia R. C. Costa, and Rafael S. Oliveira. 2017. “The Importance of Hydraulic Architecture to the Distribution Patterns of Trees in a Central Amazonian Forest.” New Phytologist 215 (1): 113–25. https://doi.org/10.1111/nph.14508.\n\n\nCosta, Flavia R. C., Juliana Schietti, Scott C. Stark, and Marielle N. Smith. 2022. “The Other Side of Tropical Forest Drought: Do Shallow Water Table Regions of Amazonia Act as Large-Scale Hydrological Refugia from Drought?” New Phytologist 237 (3): 714–33. https://doi.org/10.1111/nph.17914.\n\n\nCosta, Flávia Regina Capellotto, Jansen Alfredo Sampaio Zuanon, Fabricio Beggiato Baccaro, Juliana Schietti de Almeida, Juliana da Silva Menger, Jorge Luiz Pereira Souza, Gabriel Costa Borba, et al. 2020. “EFFECTS OF CLIMATE CHANGE ON CENTRAL AMAZONIAN FORESTS: A TWO DECADES SYNTHESIS OF MONITORING TROPICAL BIODIVERSITY.” Oecologia Australis 24 (02): 317–35. https://doi.org/10.4257/oeco.2020.2402.07.\n\n\nEsteban, Erick J. L., Carolina V. Castilho, Karina L. Melgaço, and Flávia R. C. Costa. 2020. “The Other Side of Droughts: Wet Extremes and Topography as Buffers of Negative Drought Effects in an Amazonian Forest.” New Phytologist 229 (4): 1995–2006. https://doi.org/10.1111/nph.17005.\n\n\nGarcia, Maquelle N, Jia Hu, Tomas F Domingues, Peter Groenendijk, Rafael S Oliveira, and Flávia R C Costa. 2021. “Local Hydrological Gradients Structure High Intraspecific Variability in Plant Hydraulic Traits in Two Dominant Central Amazonian Tree Species.” Edited by Howard Griffiths. Journal of Experimental Botany 73 (3): 939–52. https://doi.org/10.1093/jxb/erab432.\n\n\nToledo, José Julio, Carolina V. Castilho, William E. Magnusson, and Henrique E. M. Nascimento. 2016. “Soil Controls Biomass and Dynamics of an Amazonian Forest Through the Shifting of Species and Traits.” Brazilian Journal of Botany 40 (2): 451–61. https://doi.org/10.1007/s40415-016-0351-2."
+  },
+  {
+    "objectID": "99_references.html",
+    "href": "99_references.html",
+    "title": "References",
+    "section": "",
+    "text": "Aleixo, Izabela, Darren Norris, Lia Hemerik, Antenor Barbosa, Eduardo\nPrata, Flávia Costa, and Lourens Poorter. 2019. “Amazonian\nRainforest Tree Mortality Driven by Climate and Functional\nTraits.” Nature Climate Change 9 (5): 384–88. https://doi.org/10.1038/s41558-019-0458-0.\n\n\nCastilho, Carolina V. de, William E. Magnusson, R. Nazaré O. de Araújo,\nand Flávio J. Luizão. 2010. “Short-Term Temporal\nChanges in Tree Live Biomass in a Central Amazonian Forest,\nBrazil.” Biotropica 42 (1): 95–103. https://doi.org/10.1111/j.1744-7429.2009.00543.x.\n\n\nCastilho, Carolina V. de, William E. Magnusson, R. Nazaré O. de Araújo,\nRegina C. C. Luizão, Flávio J. Luizão, Albertina P. Lima, and Niro\nHiguchi. 2006. “Variation in Aboveground Tree Live Biomass in a\nCentral Amazonian Forest: Effects of Soil and Topography.”\nForest Ecology and Management 234 (1-3): 85–96. https://doi.org/10.1016/j.foreco.2006.06.024.\n\n\nCosme, Luiza H. M., Juliana Schietti, Flávia R. C. Costa, and Rafael S.\nOliveira. 2017. “The Importance of Hydraulic Architecture to the\nDistribution Patterns of Trees in a Central Amazonian Forest.”\nNew Phytologist 215 (1): 113–25. https://doi.org/10.1111/nph.14508.\n\n\nCosta, Flavia R. C., Juliana Schietti, Scott C. Stark, and Marielle N.\nSmith. 2022. “The Other Side of Tropical Forest Drought: Do\nShallow Water Table Regions of Amazonia Act as Large-Scale\nHydrological Refugia from Drought?” New Phytologist 237\n(3): 714–33. https://doi.org/10.1111/nph.17914.\n\n\nCosta, Flávia Regina Capellotto, Jansen Alfredo Sampaio Zuanon, Fabricio\nBeggiato Baccaro, Juliana Schietti de Almeida, Juliana da Silva Menger,\nJorge Luiz Pereira Souza, Gabriel Costa Borba, et al. 2020.\n“EFFECTS OF CLIMATE CHANGE ON CENTRAL AMAZONIAN FORESTS: A TWO\nDECADES SYNTHESIS OF MONITORING TROPICAL BIODIVERSITY.”\nOecologia Australis 24 (02): 317–35. https://doi.org/10.4257/oeco.2020.2402.07.\n\n\nEsteban, Erick J. L., Carolina V. Castilho, Karina L. Melgaço, and\nFlávia R. C. Costa. 2020. “The Other Side of Droughts: Wet\nExtremes and Topography as Buffers of Negative Drought Effects in an\nAmazonian Forest.” New Phytologist 229 (4): 1995–2006.\nhttps://doi.org/10.1111/nph.17005.\n\n\nGarcia, Maquelle N, Jia Hu, Tomas F Domingues, Peter Groenendijk, Rafael\nS Oliveira, and Flávia R C Costa. 2021. “Local Hydrological\nGradients Structure High Intraspecific Variability in Plant Hydraulic\nTraits in Two Dominant Central Amazonian Tree Species.” Edited by\nHoward Griffiths. Journal of Experimental Botany 73 (3):\n939–52. https://doi.org/10.1093/jxb/erab432.\n\n\nToledo, José Julio, Carolina V. Castilho, William E. Magnusson, and\nHenrique E. M. Nascimento. 2016. “Soil Controls Biomass and\nDynamics of an Amazonian Forest Through the Shifting of Species and\nTraits.” Brazilian Journal of Botany 40 (2): 451–61. https://doi.org/10.1007/s40415-016-0351-2."
+  }
+]

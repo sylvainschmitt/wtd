@@ -1,0 +1,16 @@
+---
+title: "Data"
+author: Sylvain Schmitt -
+date: today
+date-format: medium
+format: 
+  gfm:
+    toc: true
+    toc-depth: 2
+---
+
+All data needed for the analyses separated in "raw_data" from different sources and "derived_data" prepared and used for the analyses.
+
+```{r, comment=""}
+fs::dir_tree()
+```

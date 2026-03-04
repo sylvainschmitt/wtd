@@ -1,0 +1,16 @@
+---
+title: "Literature"
+author: Sylvain Schmitt -
+date: today
+date-format: medium
+format: 
+  gfm:
+    toc: true
+    toc-depth: 2
+---
+
+PDFs for review.
+
+```{r, comment=""}
+fs::dir_tree()
+```

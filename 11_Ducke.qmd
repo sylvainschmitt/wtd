@@ -1,0 +1,51 @@
+# Ducke {.unnumbered}
+
+```{r set}
+#| message: false
+#| warning: false
+library(tidyverse)
+trees <- readxl::read_xlsx("data/raw_data/ducke/ducke_arvores_20140214_corr_pom_planilha de trabalho.xlsx") %>% 
+  select(especie,	numero,	parcela,	x,	y,	lado) %>% 
+  rename(species = especie, id = numero, plot = parcela, side = lado) %>% 
+  separate(species, c("genus", "species")) %>% 
+  filter(!(species %in% c("na", "indet")))
+plots <- readxl::read_xls("data/raw_data/ducke/plotsducke_ambientes_completo2.xls", 2)
+env <- readxl::read_xlsx("data/raw_data/ducke/Species Weighted Averages.xlsx", 2) %>% 
+  select(Especie, hand.mean) %>% 
+  rename(species = Especie, hand = hand.mean) %>% 
+  separate(species, c("genus", "species")) %>% 
+  filter(!(species %in% c("na", "indet")))
+```
+
+```{r trees}
+#| message: false
+#| fig.cap: "Caption."
+trees %>% 
+  group_by(genus, species) %>% 
+  summarise(abundance = n()) %>% 
+  arrange(desc(abundance)) %>% 
+  ungroup() %>% 
+  mutate(rank = 1:n()) %>% 
+  ggplot(aes(rank, abundance)) +
+  geom_line() +
+  theme_bw() +
+  scale_y_log10() +
+  scale_x_log10() +
+  xlab("Rank") +
+  ylab("Abundance")
+```
+
+```{r env}
+#| message: false
+#| fig.cap: "Caption."
+trees %>% 
+  group_by(genus, species) %>% 
+  summarise(abundance = n()) %>% 
+  left_join(env) %>% 
+  ggplot(aes(hand, abundance)) +
+  geom_point() +
+  theme_bw() +
+  scale_y_log10() +
+  xlab("Abundance") +
+  ylab("Mean Hieght Above Nearest Drainage [HAND, m]")
+```

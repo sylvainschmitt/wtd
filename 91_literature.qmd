@@ -1,0 +1,109 @@
+# Literature {.unnumbered}
+
+## @costa2022
+
+Abstract:
+
+-   Tropical forest function determined by water availability
+-   Groundwater related to soil water through the water table depth (WT)
+-   Shallow WT forests (WT \< 5 m) underrepresented in research
+-   Shallow WT \~50% Amazon & different response CC droughts
+-   Review WT patterns and consequences + conceptual model (env, traits, CC)
+-   Shallow WT distinct composition: resource-acquisitive, hydrologically vulnerable, shorter canopies and lower biomass.
+-   ‘normal’ years shallow WT forests have higher mortality and lower productivity
+-   moderate droughts mortality is buffered and productivity increases
+-   severe drought more sensitive due to shallow roots and drought-intolerant traits?
+
+Notes:
+
+-   lack of WT variations in Dynamic Vegetation Models
+-   Forest dyn \| CC \~ f( WT x Clim x FT)
+-   To sim Delta WT TROLL needs stomatal control improvement that we plan to dev for rainfall exclusion experiment
+-   Shallow WT results in shallower roots due to hypoxia or anoxia (to dev)
+-   Low runoff in the Amazon with ref
+-   Wt driven by topo x clim
+-   Capillary water uprise can go from \<1m in sand to few metres in clay
+-   Anoxic conditions \> from root respiration to alcoholic fermentation \> 1 vs 36 ATP prod per glycose \> limit root growth \> reduce root permeability \> reduce stomatal conductance \> reduce photosysnthesis
+-   Anoxic conditions \> reduce available nitrogen
+-   Shallower roots \> higher uprooting
+-   Agenda: (1) understanding shallow WT productivity shifts, (2) explore a potential tipping point, (3) link WTD, WUE, CO2 enrichment and phosphorous availability, (4) predict forest responses to CC with field and remote sensing data
+
+## @aleixo2019
+
+Abstract:
+
+-   Increasing mortality in tropical moist forests
+-   Importance of climate and speceis traits evaluated with survival \>1,000 trees, \>200 species, \>50year in the Central Amazon
+-   Drought, heat, storms and extreme rainy years increase mortality to at least two years
+-   Pioneers, softwoods and evergreens are especially sensitive
+-   This may result in faster carbon sequestration but lower carbon storage
+
+## @cosme2017
+
+Abstract:
+
+-   local filtering of species link to hydraulic architectural traits?
+-   hydrological microhabitat partitioning?
+-   hydraulic characteristics at tissue (anatomical traits, wood specific gravity (WSG)), organ (leaf area, specific leaf area (SLA), leaf area : sapwood area ratio) and whole-plant (height) levels for 28 pairs of congeneric species specialized in valleys or plateaus
+-   On plateaus, higher WSG, lower mean vessel area, mean vessel hydraulic diameter, sapwood area and SLA; traits commonly associated with hydraulic safety
+-   2 strategies for either efficiency or safety were detected, based on vessel size or allocation to sapwood
+
+## @effects2020
+
+Abstract:
+
+-   20-year monitoring of 6 biological groups over 100 km2 at Ducke
+-   decrease in abundance (9 – 35 %) and richness (8 – 25 %) along time, with some taxonomic and functional reorganization
+-   more extensive changes in the valleys for trees and ants, and in first-order streams for fish
+-   bird and small trees had different patterns of composition change in valleys and plateaus
+-   forest and streams are becoming more dynamic as the hydrological cycle intensifies due to climate changes
+-   suggest riparian areas in the valleys are hydrological refuges during droughts
+
+## @decastilho2006
+
+Abstract:
+
+-   72 1-ha plots tree and palm AGB \~ soil gradients (texture & nutrients) and topography (altitude & slope)
+-   8% to 98% sand, slopes 0.5° to 27°, altitude range 70m
+-   AGB (palm+trees\>1cm) 327.8 Mg/ha (210.9-426.3)
+-   two-fold variation among plots, soil or topography explaining 20%
+-   AGB \~ +%clay +altitude !=slope
+-   slope explained 14% of the AGB in understory & emergent
+
+## @decastilho2010
+
+Abstract:
+
+-   72 1-ha plots over 2-yr: soil & topographic \~ AGB change
+-   AGB increased over 2-yr 1.65 Mg/ha/yr (1.15-2.79)
+-   understory & sub-canopy higher rates
+-   rate != soil or topography but \~ year of measurement
+
+## @esteban2020
+
+Abstract:
+
+-   Demography 30 abundant tree species \>20years, impacts of droughts & extreme wet periods, and topograpy (shallow to deep WT) with functional traits on climate effects
+-   Dry & wet extremes \~ -growth +mortality. But higher impact of interaction.
+-   Despite more drought-tolerant, species deep WT were more negatively affected than hydraulically vulnerable species shallow WT.
+-   Interaction of wet–dry extremes and WT depth modulated tree responses to climate, providing buffers to droughts in Amazonia.
+
+## @garcia2021
+
+Abstract:
+
+-   ITV LMA, WD, xylem embolism resistance 2 dominant species along water and light availability accounting tree age and height.
+-   ITV hydraulic \~ community variation
+-   ITV hydraulic \~ hydrological env, +embolism resistance in deep than shallow WT
+-   ITV LMA & WD \~ age, height, light
+-   uncoupled coordination among carbon acquisition/conservation and water-use traits
+
+## @toledo2016
+
+Abstract:
+
+-   soil, species composition, and trait distribution among 72 1-ha plots with fixed climate and control soil with plots design
+-   Soil =\> composition shift =\> CWM WD
+-   (40% AGB, 24% mortality, 18% coarse wood production) \~ clay, CEC, CWM WD, NMDS1
+-   Lower biomass and higher mortality on sandy soils is a consequence of dominance of species with low to medium wood density adapted to waterlogged and nutrient-poor sandy soils.
+-   Mesoscale variation in biomass and dynamics is caused by co-occurrence of species with similar traits in different parts of the edaphic gradient

@@ -1,0 +1,18 @@
+---
+title: "Derived data"
+author: Sylvain Schmitt -
+date: today
+date-format: medium
+format: 
+  gfm:
+    toc: true
+    toc-depth: 2
+---
+
+Derived_data prepared and used for the analyses:
+
+-   ...
+
+```{r, comment=""}
+fs::dir_tree()
+```
