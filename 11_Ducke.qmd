@@ -21,12 +21,12 @@ env <- readxl::read_xlsx("data/raw_data/ducke/Species Weighted Averages.xlsx", 2
 #| message: false
 #| fig.cap: "Caption."
 trees %>% 
-  group_by(genus, species) %>% 
+  group_by(plot, genus, species) %>% 
   summarise(abundance = n()) %>% 
   arrange(desc(abundance)) %>% 
-  ungroup() %>% 
+  group_by(plot) %>% 
   mutate(rank = 1:n()) %>% 
-  ggplot(aes(rank, abundance)) +
+  ggplot(aes(rank, abundance, group = plot)) +
   geom_line() +
   theme_bw() +
   scale_y_log10() +
@@ -39,13 +39,15 @@ trees %>%
 #| message: false
 #| fig.cap: "Caption."
 trees %>% 
-  group_by(genus, species) %>% 
+  group_by(plot, genus, species) %>% 
   summarise(abundance = n()) %>% 
+  group_by(genus, species) %>% 
+  summarise(abundance = median(abundance)) %>% 
   left_join(env) %>% 
   ggplot(aes(hand, abundance)) +
   geom_point() +
   theme_bw() +
   scale_y_log10() +
-  xlab("Abundance") +
-  ylab("Mean Hieght Above Nearest Drainage [HAND, m]")
+  xlab("Mean Hieght Above Nearest Drainage [HAND, m]") +
+  ylab("Mean abundance across plots")
 ```
