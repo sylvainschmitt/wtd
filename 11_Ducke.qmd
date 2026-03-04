@@ -1,53 +1,43 @@
 # Ducke {.unnumbered}
 
 ```{r set}
-#| message: false
-#| warning: false
+#| eval: false
 library(tidyverse)
-trees <- readxl::read_xlsx("data/raw_data/ducke/ducke_arvores_20140214_corr_pom_planilha de trabalho.xlsx") %>% 
-  select(especie,	numero,	parcela,	x,	y,	lado) %>% 
-  rename(species = especie, id = numero, plot = parcela, side = lado) %>% 
-  separate(species, c("genus", "species")) %>% 
-  filter(!(species %in% c("na", "indet")))
-plots <- readxl::read_xls("data/raw_data/ducke/plotsducke_ambientes_completo2.xls", 2)
 env <- readxl::read_xlsx("data/raw_data/ducke/Species Weighted Averages.xlsx", 2) %>% 
   select(Especie, hand.mean) %>% 
   rename(species = Especie, hand = hand.mean) %>% 
   separate(species, c("genus", "species")) %>% 
   filter(!(species %in% c("na", "indet")))
-```
-
-```{r trees}
-#| message: false
-#| fig.cap: "Caption."
-trees %>% 
-  group_by(plot, genus, species) %>% 
-  summarise(abundance = n()) %>% 
-  arrange(desc(abundance)) %>% 
-  group_by(plot) %>% 
-  mutate(rank = 1:n()) %>% 
-  ggplot(aes(rank, abundance, group = plot)) +
-  geom_line() +
-  theme_bw() +
-  scale_y_log10() +
-  scale_x_log10() +
-  xlab("Rank") +
-  ylab("Abundance")
+ducke <- readxl::read_xlsx("data/raw_data/ducke/ducke_arvores_20140214_corr_pom_planilha de trabalho.xlsx") %>% 
+  mutate_at(c("dap1", "dap1c", "dap2", "dap2c", "dap3", "dap3c"), as.numeric) %>% 
+  mutate(dbh = mean(c(dap1, dap1c, dap2, dap2c, dap3, dap3c), na.rm = TRUE)) %>% 
+  select(especie,	numero,	parcela,	x,	y,	lado, dbh) %>% 
+  rename(species = especie, id = numero, plot = parcela, side = lado) %>% 
+  separate(species, c("genus", "species")) %>% 
+  filter(!(species %in% c("na", "indet"))) %>% 
+  filter(dbh > 10) %>% 
+  mutate(group = ifelse(dbh > 30, "large", "intermediate")) %>% 
+  mutate(area = ifelse(dbh > 30, 0.5, 1)) %>% 
+  left_join(env)
+ducke_sum <- ducke %>% 
+  group_by(plot, group, genus, species) %>% 
+  summarise(hand = mean(hand, na.rm = TRUE), abundance = n()/unique(area)) %>% 
+  group_by(genus, species) %>% 
+  summarise(hand = median(hand, na.rm = TRUE),
+            sd_abundance = sd(abundance, na.rm = TRUE),
+            abundance = median(abundance, na.rm = TRUE))
+write_tsv(ducke_sum, "data/derived_data/ducke_sum.tsv")
 ```
 
 ```{r env}
 #| message: false
 #| fig.cap: "Caption."
-trees %>% 
-  group_by(plot, genus, species) %>% 
-  summarise(abundance = n()) %>% 
-  group_by(genus, species) %>% 
-  summarise(abundance = median(abundance)) %>% 
-  left_join(env) %>% 
+library(tidyverse)
+read_tsv("data/derived_data/ducke_sum.tsv") %>% 
   ggplot(aes(hand, abundance)) +
   geom_point() +
   theme_bw() +
   scale_y_log10() +
-  xlab("Mean Hieght Above Nearest Drainage [HAND, m]") +
+  xlab("Mean Height Above Nearest Drainage [HAND, m]") +
   ylab("Mean abundance across plots")
 ```

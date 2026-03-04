@@ -1,3 +1,44 @@
 # Paracou {.unnumbered}
 
-## 
+```{r set}
+#| eval: false
+library(tidyverse)
+library(sf)
+library(terra)
+paracou <- read_tsv("data/raw_data/paracou/paracou.tsv") %>% 
+  filter(Forest == "Paracou") %>% 
+  filter(as.numeric(Plot) %in% 1:15) %>% 
+  group_by(Plot) %>% 
+  filter(CensusYear == max(CensusYear)) %>% 
+  select(Plot, Family, Genus, Species, idTree, Xutm, Yutm) %>% 
+  rename(plot = Plot, family = Family, genus = Genus, species = Species,
+         id = idTree, x = Xutm, y = Yutm) %>%  
+  filter(!is.na(x), !is.na(y), species != "Indet.")
+xy <- paracou %>% 
+  st_as_sf(coords = c("x", "y"), crs = 32622)
+hand <- rast("data/raw_data/paracou/RelativeElevation_1m.tif")
+crs(hand) <- crs(xy)
+paracou$hand <- extract(hand, xy)$RelativeElevation_1m
+paracou_sum <- paracou %>% 
+  group_by(plot, family, genus, species) %>% 
+  summarise(hand = mean(hand, na.rm = TRUE), abundance = n()/6.25) %>% 
+  group_by(family, genus, species) %>% 
+  summarise(sd_hand = sd(hand, na.rm = TRUE),
+            hand = median(hand, na.rm = TRUE),
+            sd_abundance = sd(abundance, na.rm = TRUE),
+            abundance = median(abundance, na.rm = TRUE))
+write_tsv(paracou_sum, "data/derived_data/paracou_sum.tsv")
+```
+
+```{r env}
+#| message: false
+#| fig.cap: "Caption."
+library(tidyverse)
+read_tsv("data/derived_data/paracou_sum.tsv") %>% 
+  ggplot(aes(hand, abundance)) +
+  geom_point() +
+  theme_bw() +
+  scale_y_log10() +
+  xlab("Mean Height Above Nearest Drainage [HAND, m]") +
+  ylab("Mean abundance across plots [ N/ha]")
+```

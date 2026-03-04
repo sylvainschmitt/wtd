@@ -10,6 +10,8 @@ book:
     - index.qmd
     - 11_Ducke.qmd
     - 12_Paracou.qmd
+    - 13_Species.qmd
+    - 14_Comparisons.qmd
   appendices:
     - 91_literature.qmd
     - 99_references.qmd

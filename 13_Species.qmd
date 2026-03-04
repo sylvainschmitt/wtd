@@ -1,0 +1,47 @@
+# Species {.unnumbered}
+
+Harmonization with WFO.
+
+```{r set}
+#| eval: false
+library(tidyverse)
+library(WorldFlora)
+library(fuzzyjoin)
+taxo <- list(
+  Ducke = "data/derived_data/ducke_sum.tsv",
+  Paracou = "data/derived_data/paracou_sum.tsv"
+) %>% lapply(read_tsv) %>% 
+  bind_rows(.id = "site") %>% 
+  select(family, genus, species) %>% 
+  unique() %>% 
+  mutate(scientific = paste(genus, species)) %>% 
+  arrange(scientific)
+wfo <- read_tsv("data/raw_data/WFO_Backbone.zip")
+wfo_sub <- wfo %>% filter(family %in% taxo$family)
+write_tsv(wfo_sub, "data/derived_data/backbone.tsv")
+cleaned <- WFO.match.fuzzyjoin(
+    spec.data = taxo$scientific,
+    WFO.file = "data/derived_data/backbone.tsv"
+  )
+write_tsv(cleaned, "data/derived_data/wfo_res.tsv")
+read_tsv("data/derived_data/wfo_res.tsv") %>% 
+  filter(Matched, Unique) %>% 
+  select(spec.name, family, genus, specificEpithet, scientificName) %>% 
+  rename(
+    scientific = spec.name,
+    family_cleaned = family,
+    genus_cleaned = genus,
+    species_cleaned = specificEpithet,
+    scientific_cleaned = scientificName
+  ) %>% 
+  write_tsv("data/derived_data/cor_tab.tsv")
+```
+
+```{r tab}
+#| message: false
+#| warning: false
+library(tidyverse)
+read_tsv("data/derived_data/cor_tab.tsv") %>% 
+  head() %>% 
+  knitr::kable(caption = "Caption.")
+```
