@@ -9,8 +9,7 @@ env <- readxl::read_xlsx("data/raw_data/ducke/Species Weighted Averages.xlsx", 2
   separate(species, c("genus", "species")) %>% 
   filter(!(species %in% c("na", "indet")))
 ducke <- readxl::read_xlsx("data/raw_data/ducke/ducke_arvores_20140214_corr_pom_planilha de trabalho.xlsx") %>% 
-  mutate_at(c("dap1", "dap1c", "dap2", "dap2c", "dap3", "dap3c"), as.numeric) %>% 
-  mutate(dbh = mean(c(dap1, dap1c, dap2, dap2c, dap3, dap3c), na.rm = TRUE)) %>% 
+  mutate(dbh = as.numeric(dap3c)) %>% 
   select(especie,	numero,	parcela,	x,	y,	lado, dbh) %>% 
   rename(species = especie, id = numero, plot = parcela, side = lado) %>% 
   separate(species, c("genus", "species")) %>% 
@@ -20,24 +19,31 @@ ducke <- readxl::read_xlsx("data/raw_data/ducke/ducke_arvores_20140214_corr_pom_
   mutate(area = ifelse(dbh > 30, 0.5, 1)) %>% 
   left_join(env)
 ducke_sum <- ducke %>% 
-  group_by(plot, group, genus, species) %>% 
-  summarise(hand = mean(hand, na.rm = TRUE), abundance = n()/unique(area)) %>% 
+  group_by(group) %>% 
+  mutate(n_plot = length(unique(plot))) %>% 
+  group_by(group, genus, species) %>% 
+  summarise(hand = mean(hand, na.rm = TRUE), 
+            abundance = n()) %>% 
+  mutate(abundance = ifelse(group == "intermediate", 
+                            abundance*2, abundance)) %>% 
   group_by(genus, species) %>% 
   summarise(hand = median(hand, na.rm = TRUE),
             sd_abundance = sd(abundance, na.rm = TRUE),
-            abundance = median(abundance, na.rm = TRUE))
+            abundance = mean(abundance, na.rm = TRUE)/72)
 write_tsv(ducke_sum, "data/derived_data/ducke_sum.tsv")
 ```
 
+For trees above 10-cm DBH, Ducke has 27 0.5-ha plots for trees in 10-30-cm DBH and 27 1-ha plots for trees \>30-cm DBH. We computed then the mean abundance across all 72 plots and the associated mean Height Above Nearest Drainage (HAND, m).
+
 ```{r env}
 #| message: false
-#| fig.cap: "Caption."
+#| fig.cap: "Species mean abundance (N/Ha) versus mean HAND (m) in Ducke."
 library(tidyverse)
 read_tsv("data/derived_data/ducke_sum.tsv") %>% 
   ggplot(aes(hand, abundance)) +
   geom_point() +
   theme_bw() +
   scale_y_log10() +
-  xlab("Mean Height Above Nearest Drainage [HAND, m]") +
-  ylab("Mean abundance across plots")
+  xlab("Mean HAND [m]") +
+  ylab("Mean Abundance [N/ha]")
 ```

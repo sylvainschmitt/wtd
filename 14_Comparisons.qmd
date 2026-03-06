@@ -29,27 +29,48 @@ data <- list(Ducke = ducke, Paracou = paracou) %>%
   pivot_wider(names_from = variable, values_from = value) %>% 
   rowwise() %>% 
   mutate(hand_mean = mean(c(hand_Paracou, hand_Ducke), na.rm = TRUE)) %>% 
-  mutate(abundance_mean = mean(c(abundance_Paracou, abundance_Ducke), na.rm = TRUE))
+  mutate(abundance_mean = mean(c(abundance_Paracou, abundance_Ducke), na.rm = TRUE)) %>% 
+  arrange(desc(abundance_mean))
 ```
+
+## Shared species
+
+Ducke has a total of 948 species after quick taxonomic correction against 706 Paracou of which only 223 (20%) are shared.
 
 ```{r venn}
 #| message: false
 #| warning: false
-#| fig-cap: Caption.
+#| fig-cap: Unique and shared species across sites
 library(ggvenn)
-ggvenn(list(Ducke = ducke$scientific, 
-            Paracou = paracou$scientific))
+ggvenn(list('Ducke (72-ha)' = ducke$scientific, 
+            "Paracou (93.75-ha)" = paracou$scientific))
 ```
+
+```{r shared_sp_tab}
+t <- bind_rows(
+  head(na.omit(data)),
+  tail(na.omit(data))
+)
+knitr::kable(t, caption = "Top 10 most and least abundant shared species.")
+```
+
+> Beware the first is palm. But the third is the Amazonian hyperdominant *Eschweilera Coariacea.*
+
+## Abundances
+
+Abundances are slightly correlated across sites.
 
 ```{r abund}
 #| message: false
 #| warning: false
-#| fig-cap: Caption.
+#| fig-cap: Abundances (N/ha) comparisons for the common species between Ducke and Paracou.
 data %>% 
+  mutate(label = ifelse((genus %in% t$genus && species %in% t$species),
+                        paste0(str_sub(genus, 1, 1), ". ", species), "")) %>% 
   ggplot(aes(abundance_Paracou, abundance_Ducke, col = hand_mean)) +
   geom_abline() +
-  geom_smooth(method = "lm", se = FALSE, col = "grey") +
   geom_point() +
+  ggrepel::geom_text_repel(aes(label = label)) +
   theme_bw() +
   scale_x_log10() +
   scale_y_log10() +
@@ -60,26 +81,54 @@ data %>%
   ylab("Ducke Mean Abundance [N/ha]")
 ```
 
+## Habitats
+
+Mean HAND does not seem correlated across sites, but this probably a too quick and dirty measure of habitat.
+
 ```{r hand}
 #| message: false
 #| warning: false
-#| fig-cap: Caption.
+#| fig-cap: HAND (m) comparisons for the common species between Ducke and Paracou.
+m_hand_duc <- median(data$hand_Ducke, na.rm = TRUE)
+m_hand_par <- median(data$hand_Paracou, na.rm = TRUE)
 data %>% 
+  mutate(label = ifelse((genus %in% t$genus && species %in% t$species),
+                        paste0(str_sub(genus, 1, 1), ". ", species), "")) %>% 
   ggplot(aes(hand_Paracou, hand_Ducke, col = abundance_mean)) +
   geom_abline() +
-  geom_smooth(method = "lm", se = FALSE, col = "grey") +
   geom_point() +
+  ggrepel::geom_text_repel(aes(label = label)) +
   theme_bw() +
   scale_color_viridis_c("Mean\nAbundance\n[N/ha]", trans = "log") +
   ggpubr::stat_cor() +
-  xlab("Paracou Mean Height Above Nearest Drainage [HAND, m]") +
+  xlab("Paracou Mean HAND [HAND, m]") +
   ylab("Ducke Mean HAND [m]") +
-  geom_vline(xintercept = 10, linetype = "dashed")
+  geom_vline(xintercept = m_hand_par, linetype = "dashed") + 
+  geom_hline(yintercept = m_hand_duc, linetype = "dashed")
 ```
 
+57 species are common between Paracou and Ducke with low HAND values and 57 with high HAND values.
+
 ```{r venn_hand}
-ggvenn(list("Ducke HAND<10" = filter(ducke, hand < 10)$scientific, 
-            "Paracou HAND<10" = filter(paracou, hand < 10)$scientific, 
-            "Ducke HAND>=10" = filter(ducke, hand >= 10)$scientific, 
-            "Paracou HAND>=10" = filter(paracou, hand >= 10)$scientific))
+#| fig-cap: Shared species across sites and high or low values of HAND (above or below the site median).
+ggvenn(list("Ducke HAND-" = filter(ducke, hand < m_hand_duc)$scientific, 
+            "Paracou HAND-" = filter(paracou, hand < m_hand_par)$scientific, 
+            "Ducke HAND+" = filter(ducke, hand >= m_hand_duc)$scientific, 
+            "Paracou HAND+" = filter(paracou, hand >= m_hand_par)$scientific))
+```
+
+```{r high_hand_tab}
+data %>% 
+  na.omit() %>% 
+  filter(hand_Paracou > m_hand_par, hand_Ducke > m_hand_duc) %>% 
+  head() %>% 
+  knitr::kable(caption = "Common species between Paracou and Ducke with high HAND values.")
+```
+
+```{r low_hand_tab}
+data %>% 
+  na.omit() %>% 
+  filter(hand_Paracou < m_hand_par, hand_Ducke < m_hand_duc) %>% 
+  head() %>% 
+  knitr::kable(caption = "Common species between Paracou and Ducke with low HAND values.")
 ```

@@ -224,26 +224,31 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">separate</span>(species, <span class="fu">c</span>(<span class="st">"genus"</span>, <span class="st">"species"</span>)) <span class="sc">%&gt;%</span> </span>
 <span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="sc">!</span>(species <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"na"</span>, <span class="st">"indet"</span>)))</span>
 <span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>ducke <span class="ot">&lt;-</span> readxl<span class="sc">::</span><span class="fu">read_xlsx</span>(<span class="st">"data/raw_data/ducke/ducke_arvores_20140214_corr_pom_planilha de trabalho.xlsx"</span>) <span class="sc">%&gt;%</span> </span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate_at</span>(<span class="fu">c</span>(<span class="st">"dap1"</span>, <span class="st">"dap1c"</span>, <span class="st">"dap2"</span>, <span class="st">"dap2c"</span>, <span class="st">"dap3"</span>, <span class="st">"dap3c"</span>), as.numeric) <span class="sc">%&gt;%</span> </span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">dbh =</span> <span class="fu">mean</span>(<span class="fu">c</span>(dap1, dap1c, dap2, dap2c, dap3, dap3c), <span class="at">na.rm =</span> <span class="cn">TRUE</span>)) <span class="sc">%&gt;%</span> </span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(especie,   numero, parcela,    x,  y,  lado, dbh) <span class="sc">%&gt;%</span> </span>
-<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="at">species =</span> especie, <span class="at">id =</span> numero, <span class="at">plot =</span> parcela, <span class="at">side =</span> lado) <span class="sc">%&gt;%</span> </span>
-<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">separate</span>(species, <span class="fu">c</span>(<span class="st">"genus"</span>, <span class="st">"species"</span>)) <span class="sc">%&gt;%</span> </span>
-<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="sc">!</span>(species <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"na"</span>, <span class="st">"indet"</span>))) <span class="sc">%&gt;%</span> </span>
-<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(dbh <span class="sc">&gt;</span> <span class="dv">10</span>) <span class="sc">%&gt;%</span> </span>
-<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">group =</span> <span class="fu">ifelse</span>(dbh <span class="sc">&gt;</span> <span class="dv">30</span>, <span class="st">"large"</span>, <span class="st">"intermediate"</span>)) <span class="sc">%&gt;%</span> </span>
-<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">area =</span> <span class="fu">ifelse</span>(dbh <span class="sc">&gt;</span> <span class="dv">30</span>, <span class="fl">0.5</span>, <span class="dv">1</span>)) <span class="sc">%&gt;%</span> </span>
-<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(env)</span>
-<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>ducke_sum <span class="ot">&lt;-</span> ducke <span class="sc">%&gt;%</span> </span>
-<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(plot, group, genus, species) <span class="sc">%&gt;%</span> </span>
-<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">hand =</span> <span class="fu">mean</span>(hand, <span class="at">na.rm =</span> <span class="cn">TRUE</span>), <span class="at">abundance =</span> <span class="fu">n</span>()<span class="sc">/</span><span class="fu">unique</span>(area)) <span class="sc">%&gt;%</span> </span>
-<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(genus, species) <span class="sc">%&gt;%</span> </span>
-<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">hand =</span> <span class="fu">median</span>(hand, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
-<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a>            <span class="at">sd_abundance =</span> <span class="fu">sd</span>(abundance, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
-<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a>            <span class="at">abundance =</span> <span class="fu">median</span>(abundance, <span class="at">na.rm =</span> <span class="cn">TRUE</span>))</span>
-<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a><span class="fu">write_tsv</span>(ducke_sum, <span class="st">"data/derived_data/ducke_sum.tsv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">dbh =</span> <span class="fu">as.numeric</span>(dap3c)) <span class="sc">%&gt;%</span> </span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(especie,   numero, parcela,    x,  y,  lado, dbh) <span class="sc">%&gt;%</span> </span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="at">species =</span> especie, <span class="at">id =</span> numero, <span class="at">plot =</span> parcela, <span class="at">side =</span> lado) <span class="sc">%&gt;%</span> </span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">separate</span>(species, <span class="fu">c</span>(<span class="st">"genus"</span>, <span class="st">"species"</span>)) <span class="sc">%&gt;%</span> </span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="sc">!</span>(species <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"na"</span>, <span class="st">"indet"</span>))) <span class="sc">%&gt;%</span> </span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(dbh <span class="sc">&gt;</span> <span class="dv">10</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">group =</span> <span class="fu">ifelse</span>(dbh <span class="sc">&gt;</span> <span class="dv">30</span>, <span class="st">"large"</span>, <span class="st">"intermediate"</span>)) <span class="sc">%&gt;%</span> </span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">area =</span> <span class="fu">ifelse</span>(dbh <span class="sc">&gt;</span> <span class="dv">30</span>, <span class="fl">0.5</span>, <span class="dv">1</span>)) <span class="sc">%&gt;%</span> </span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(env)</span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>ducke_sum <span class="ot">&lt;-</span> ducke <span class="sc">%&gt;%</span> </span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(group) <span class="sc">%&gt;%</span> </span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">n_plot =</span> <span class="fu">length</span>(<span class="fu">unique</span>(plot))) <span class="sc">%&gt;%</span> </span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(group, genus, species) <span class="sc">%&gt;%</span> </span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">hand =</span> <span class="fu">mean</span>(hand, <span class="at">na.rm =</span> <span class="cn">TRUE</span>), </span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a>            <span class="at">abundance =</span> <span class="fu">n</span>()) <span class="sc">%&gt;%</span> </span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">abundance =</span> <span class="fu">ifelse</span>(group <span class="sc">==</span> <span class="st">"intermediate"</span>, </span>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a>                            abundance<span class="sc">*</span><span class="dv">2</span>, abundance)) <span class="sc">%&gt;%</span> </span>
+<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(genus, species) <span class="sc">%&gt;%</span> </span>
+<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">hand =</span> <span class="fu">median</span>(hand, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a>            <span class="at">sd_abundance =</span> <span class="fu">sd</span>(abundance, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a>            <span class="at">abundance =</span> <span class="fu">mean</span>(abundance, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)<span class="sc">/</span><span class="dv">72</span>)</span>
+<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a><span class="fu">write_tsv</span>(ducke_sum, <span class="st">"data/derived_data/ducke_sum.tsv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
+<p>For trees above 10-cm DBH, Ducke has 27 0.5-ha plots for trees in 10-30-cm DBH and 27 1-ha plots for trees &gt;30-cm DBH. We computed then the mean abundance across all 72 plots and the associated mean Height Above Nearest Drainage (HAND, m).</p>
 <div class="cell">
 <details>
 <summary>Code</summary>
@@ -253,14 +258,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
 <span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>() <span class="sc">+</span></span>
 <span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_log10</span>() <span class="sc">+</span></span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">xlab</span>(<span class="st">"Mean Height Above Nearest Drainage [HAND, m]"</span>) <span class="sc">+</span></span>
-<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ylab</span>(<span class="st">"Mean abundance across plots"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">xlab</span>(<span class="st">"Mean HAND [m]"</span>) <span class="sc">+</span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ylab</span>(<span class="st">"Mean Abundance [N/ha]"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><img src="11_Ducke_files/figure-html/env-1.png" class="img-fluid figure-img" width="672"></p>
-<figcaption class="figure-caption">Caption.</figcaption>
+<figcaption class="figure-caption">Species mean abundance (N/Ha) versus mean HAND (m) in Ducke.</figcaption>
 </figure>
 </div>
 </div>

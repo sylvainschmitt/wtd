@@ -20,25 +20,23 @@ hand <- rast("data/raw_data/paracou/RelativeElevation_1m.tif")
 crs(hand) <- crs(xy)
 paracou$hand <- extract(hand, xy)$RelativeElevation_1m
 paracou_sum <- paracou %>% 
-  group_by(plot, family, genus, species) %>% 
-  summarise(hand = mean(hand, na.rm = TRUE), abundance = n()/6.25) %>% 
   group_by(family, genus, species) %>% 
-  summarise(sd_hand = sd(hand, na.rm = TRUE),
-            hand = median(hand, na.rm = TRUE),
-            sd_abundance = sd(abundance, na.rm = TRUE),
-            abundance = median(abundance, na.rm = TRUE))
+  summarise(hand = median(hand, na.rm = TRUE),
+            abundance = n()/(6.25*15))
 write_tsv(paracou_sum, "data/derived_data/paracou_sum.tsv")
 ```
 
+For trees above 10-cm DBH, I used plots 1 to 15 that are all 6.25-ha and computed then the mean abundance across all 15 plots and the associated mean Height Above Nearest Drainage (HAND, m).
+
 ```{r env}
 #| message: false
-#| fig.cap: "Caption."
+#| fig.cap: "Species mean abundance (N/Ha) versus mean HAND (m) in Paracou."
 library(tidyverse)
 read_tsv("data/derived_data/paracou_sum.tsv") %>% 
   ggplot(aes(hand, abundance)) +
   geom_point() +
   theme_bw() +
   scale_y_log10() +
-  xlab("Mean Height Above Nearest Drainage [HAND, m]") +
-  ylab("Mean abundance across plots [ N/ha]")
+  xlab("Mean HAND [m]") +
+  ylab("Mean Abundance [ N/ha]")
 ```

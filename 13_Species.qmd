@@ -1,6 +1,6 @@
 # Species {.unnumbered}
 
-Harmonization with WFO.
+We used the World Flora Online backbone to homogenise taxonomy across sites with a strict rule keeping only unique single match.
 
 ```{r set}
 #| eval: false
@@ -43,5 +43,5 @@ read_tsv("data/derived_data/wfo_res.tsv") %>%
 library(tidyverse)
 read_tsv("data/derived_data/cor_tab.tsv") %>% 
   head() %>% 
-  knitr::kable(caption = "Caption.")
+  knitr::kable(caption = "Updated taxonomy extract.")
 ```

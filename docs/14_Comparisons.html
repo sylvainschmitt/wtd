@@ -192,7 +192,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div id="quarto-sidebar-glass" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass"></div>
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#shared-species" id="toc-shared-species" class="nav-link active" data-scroll-target="#shared-species">Shared species</a></li>
+  <li><a href="#abundances" id="toc-abundances" class="nav-link" data-scroll-target="#abundances">Abundances</a></li>
+  <li><a href="#habitats" id="toc-habitats" class="nav-link" data-scroll-target="#habitats">Habitats</a></li>
+  </ul>
+</nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
@@ -243,21 +251,25 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_wider</span>(<span class="at">names_from =</span> variable, <span class="at">values_from =</span> value) <span class="sc">%&gt;%</span> </span>
 <span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rowwise</span>() <span class="sc">%&gt;%</span> </span>
 <span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">hand_mean =</span> <span class="fu">mean</span>(<span class="fu">c</span>(hand_Paracou, hand_Ducke), <span class="at">na.rm =</span> <span class="cn">TRUE</span>)) <span class="sc">%&gt;%</span> </span>
-<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">abundance_mean =</span> <span class="fu">mean</span>(<span class="fu">c</span>(abundance_Paracou, abundance_Ducke), <span class="at">na.rm =</span> <span class="cn">TRUE</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">abundance_mean =</span> <span class="fu">mean</span>(<span class="fu">c</span>(abundance_Paracou, abundance_Ducke), <span class="at">na.rm =</span> <span class="cn">TRUE</span>)) <span class="sc">%&gt;%</span> </span>
+<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(<span class="fu">desc</span>(abundance_mean))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
+<section id="shared-species" class="level2">
+<h2 class="anchored" data-anchor-id="shared-species">Shared species</h2>
+<p>Ducke has a total of 948 species after quick taxonomic correction against 706 Paracou of which only 223 (20%) are shared.</p>
 <div class="cell">
 <details>
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggvenn)</span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggvenn</span>(<span class="fu">list</span>(<span class="at">Ducke =</span> ducke<span class="sc">$</span>scientific, </span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>            <span class="at">Paracou =</span> paracou<span class="sc">$</span>scientific))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggvenn</span>(<span class="fu">list</span>(<span class="st">'Ducke (72-ha)'</span> <span class="ot">=</span> ducke<span class="sc">$</span>scientific, </span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>            <span class="st">"Paracou (93.75-ha)"</span> <span class="ot">=</span> paracou<span class="sc">$</span>scientific))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><img src="14_Comparisons_files/figure-html/venn-1.png" class="img-fluid figure-img" width="672"></p>
-<figcaption class="figure-caption">Caption.</figcaption>
+<figcaption class="figure-caption">Unique and shared species across sites</figcaption>
 </figure>
 </div>
 </div>
@@ -265,49 +277,258 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="cell">
 <details>
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>data <span class="sc">%&gt;%</span> </span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(abundance_Paracou, abundance_Ducke, <span class="at">col =</span> hand_mean)) <span class="sc">+</span></span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_abline</span>() <span class="sc">+</span></span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(<span class="at">method =</span> <span class="st">"lm"</span>, <span class="at">se =</span> <span class="cn">FALSE</span>, <span class="at">col =</span> <span class="st">"grey"</span>) <span class="sc">+</span></span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
-<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>() <span class="sc">+</span></span>
-<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_log10</span>() <span class="sc">+</span></span>
-<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_log10</span>() <span class="sc">+</span></span>
-<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_viridis_c</span>() <span class="sc">+</span></span>
-<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_viridis_c</span>(<span class="st">"Mean</span><span class="sc">\n</span><span class="st">HAND</span><span class="sc">\n</span><span class="st">[m]"</span>) <span class="sc">+</span></span>
-<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>  ggpubr<span class="sc">::</span><span class="fu">stat_cor</span>() <span class="sc">+</span></span>
-<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">xlab</span>(<span class="st">"Paracou Mean Abundance [N/ha]"</span>) <span class="sc">+</span></span>
-<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ylab</span>(<span class="st">"Ducke Mean Abundance [N/ha]"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>t <span class="ot">&lt;-</span> <span class="fu">bind_rows</span>(</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">head</span>(<span class="fu">na.omit</span>(data)),</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tail</span>(<span class="fu">na.omit</span>(data))</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">kable</span>(t, <span class="at">caption =</span> <span class="st">"Top 10 most and least abundant shared species."</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<table class="table table-sm table-striped small">
+<caption>Top 10 most and least abundant shared species.</caption>
+<colgroup>
+<col style="width: 12%">
+<col style="width: 14%">
+<col style="width: 11%">
+<col style="width: 11%">
+<col style="width: 13%">
+<col style="width: 8%">
+<col style="width: 9%">
+<col style="width: 7%">
+<col style="width: 11%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">family</th>
+<th style="text-align: left;">genus</th>
+<th style="text-align: left;">species</th>
+<th style="text-align: right;">abundance_Ducke</th>
+<th style="text-align: right;">abundance_Paracou</th>
+<th style="text-align: right;">hand_Ducke</th>
+<th style="text-align: right;">hand_Paracou</th>
+<th style="text-align: right;">hand_mean</th>
+<th style="text-align: right;">abundance_mean</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Arecaceae</td>
+<td style="text-align: left;">Oenocarpus</td>
+<td style="text-align: left;">bataua</td>
+<td style="text-align: right;">6.1250000</td>
+<td style="text-align: right;">12.6933333</td>
+<td style="text-align: right;">4.922686</td>
+<td style="text-align: right;">6.635</td>
+<td style="text-align: right;">5.778843</td>
+<td style="text-align: right;">9.4091667</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Peraceae</td>
+<td style="text-align: left;">Pogonophora</td>
+<td style="text-align: left;">schomburgkiana</td>
+<td style="text-align: right;">0.4305556</td>
+<td style="text-align: right;">14.9866667</td>
+<td style="text-align: right;">23.307306</td>
+<td style="text-align: right;">11.850</td>
+<td style="text-align: right;">17.578653</td>
+<td style="text-align: right;">7.7086111</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Lecythidaceae</td>
+<td style="text-align: left;">Eschweilera</td>
+<td style="text-align: left;">coriacea</td>
+<td style="text-align: right;">6.6527778</td>
+<td style="text-align: right;">7.2426667</td>
+<td style="text-align: right;">17.098348</td>
+<td style="text-align: right;">5.620</td>
+<td style="text-align: right;">11.359174</td>
+<td style="text-align: right;">6.9477222</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Chrysobalanaceae</td>
+<td style="text-align: left;">Hymenopus</td>
+<td style="text-align: left;">heteromorphus</td>
+<td style="text-align: right;">1.4583333</td>
+<td style="text-align: right;">11.2000000</td>
+<td style="text-align: right;">26.191637</td>
+<td style="text-align: right;">15.270</td>
+<td style="text-align: right;">20.730818</td>
+<td style="text-align: right;">6.3291667</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Arecaceae</td>
+<td style="text-align: left;">Oenocarpus</td>
+<td style="text-align: left;">bacaba</td>
+<td style="text-align: right;">8.3055556</td>
+<td style="text-align: right;">2.8693333</td>
+<td style="text-align: right;">27.503837</td>
+<td style="text-align: right;">17.690</td>
+<td style="text-align: right;">22.596919</td>
+<td style="text-align: right;">5.5874444</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Sapotaceae</td>
+<td style="text-align: left;">Pradosia</td>
+<td style="text-align: left;">cochlearia</td>
+<td style="text-align: right;">0.1041667</td>
+<td style="text-align: right;">8.1386667</td>
+<td style="text-align: right;">26.483211</td>
+<td style="text-align: right;">13.160</td>
+<td style="text-align: right;">19.821606</td>
+<td style="text-align: right;">4.1214167</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Chrysobalanaceae</td>
+<td style="text-align: left;">Parinari</td>
+<td style="text-align: left;">parvifolia</td>
+<td style="text-align: right;">0.0486111</td>
+<td style="text-align: right;">0.0106667</td>
+<td style="text-align: right;">21.282252</td>
+<td style="text-align: right;">2.420</td>
+<td style="text-align: right;">11.851126</td>
+<td style="text-align: right;">0.0296389</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Lauraceae</td>
+<td style="text-align: left;">Ocotea</td>
+<td style="text-align: left;">oblonga</td>
+<td style="text-align: right;">0.0277778</td>
+<td style="text-align: right;">0.0106667</td>
+<td style="text-align: right;">21.068329</td>
+<td style="text-align: right;">17.000</td>
+<td style="text-align: right;">19.034164</td>
+<td style="text-align: right;">0.0192222</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Lauraceae</td>
+<td style="text-align: left;">Rhodostemonodaphne</td>
+<td style="text-align: left;">kunthiana</td>
+<td style="text-align: right;">0.0277778</td>
+<td style="text-align: right;">0.0106667</td>
+<td style="text-align: right;">18.346869</td>
+<td style="text-align: right;">21.420</td>
+<td style="text-align: right;">19.883434</td>
+<td style="text-align: right;">0.0192222</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Ebenaceae</td>
+<td style="text-align: left;">Diospyros</td>
+<td style="text-align: left;">capreifolia</td>
+<td style="text-align: right;">0.0208333</td>
+<td style="text-align: right;">0.0106667</td>
+<td style="text-align: right;">17.530221</td>
+<td style="text-align: right;">0.510</td>
+<td style="text-align: right;">9.020110</td>
+<td style="text-align: right;">0.0157500</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Peraceae</td>
+<td style="text-align: left;">Pera</td>
+<td style="text-align: left;">glabrata</td>
+<td style="text-align: right;">0.0208333</td>
+<td style="text-align: right;">0.0106667</td>
+<td style="text-align: right;">30.953746</td>
+<td style="text-align: right;">16.380</td>
+<td style="text-align: right;">23.666873</td>
+<td style="text-align: right;">0.0157500</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Myristicaceae</td>
+<td style="text-align: left;">Virola</td>
+<td style="text-align: left;">sebifera</td>
+<td style="text-align: right;">0.0138889</td>
+<td style="text-align: right;">0.0106667</td>
+<td style="text-align: right;">8.369046</td>
+<td style="text-align: right;">15.480</td>
+<td style="text-align: right;">11.924523</td>
+<td style="text-align: right;">0.0122778</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<blockquote class="blockquote">
+<p>Beware the first is palm. But the third is the Amazonian hyperdominant <em>Eschweilera Coariacea.</em></p>
+</blockquote>
+</section>
+<section id="abundances" class="level2">
+<h2 class="anchored" data-anchor-id="abundances">Abundances</h2>
+<p>Abundances are slightly correlated across sites.</p>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>data <span class="sc">%&gt;%</span> </span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">label =</span> <span class="fu">ifelse</span>((genus <span class="sc">%in%</span> t<span class="sc">$</span>genus <span class="sc">&amp;&amp;</span> species <span class="sc">%in%</span> t<span class="sc">$</span>species),</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>                        <span class="fu">paste0</span>(<span class="fu">str_sub</span>(genus, <span class="dv">1</span>, <span class="dv">1</span>), <span class="st">". "</span>, species), <span class="st">""</span>)) <span class="sc">%&gt;%</span> </span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(abundance_Paracou, abundance_Ducke, <span class="at">col =</span> hand_mean)) <span class="sc">+</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_abline</span>() <span class="sc">+</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>  ggrepel<span class="sc">::</span><span class="fu">geom_text_repel</span>(<span class="fu">aes</span>(<span class="at">label =</span> label)) <span class="sc">+</span></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>() <span class="sc">+</span></span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_log10</span>() <span class="sc">+</span></span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_log10</span>() <span class="sc">+</span></span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_viridis_c</span>() <span class="sc">+</span></span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_viridis_c</span>(<span class="st">"Mean</span><span class="sc">\n</span><span class="st">HAND</span><span class="sc">\n</span><span class="st">[m]"</span>) <span class="sc">+</span></span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>  ggpubr<span class="sc">::</span><span class="fu">stat_cor</span>() <span class="sc">+</span></span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">xlab</span>(<span class="st">"Paracou Mean Abundance [N/ha]"</span>) <span class="sc">+</span></span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ylab</span>(<span class="st">"Ducke Mean Abundance [N/ha]"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><img src="14_Comparisons_files/figure-html/abund-1.png" class="img-fluid figure-img" width="672"></p>
-<figcaption class="figure-caption">Caption.</figcaption>
+<figcaption class="figure-caption">Abundances (N/ha) comparisons for the common species between Ducke and Paracou.</figcaption>
 </figure>
 </div>
 </div>
 </div>
+</section>
+<section id="habitats" class="level2">
+<h2 class="anchored" data-anchor-id="habitats">Habitats</h2>
+<p>Mean HAND does not seem correlated across sites, but this probably a too quick and dirty measure of habitat.</p>
 <div class="cell">
 <details>
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>data <span class="sc">%&gt;%</span> </span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(hand_Paracou, hand_Ducke, <span class="at">col =</span> abundance_mean)) <span class="sc">+</span></span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_abline</span>() <span class="sc">+</span></span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(<span class="at">method =</span> <span class="st">"lm"</span>, <span class="at">se =</span> <span class="cn">FALSE</span>, <span class="at">col =</span> <span class="st">"grey"</span>) <span class="sc">+</span></span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
-<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>() <span class="sc">+</span></span>
-<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_viridis_c</span>(<span class="st">"Mean</span><span class="sc">\n</span><span class="st">Abundance</span><span class="sc">\n</span><span class="st">[N/ha]"</span>, <span class="at">trans =</span> <span class="st">"log"</span>) <span class="sc">+</span></span>
-<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>  ggpubr<span class="sc">::</span><span class="fu">stat_cor</span>() <span class="sc">+</span></span>
-<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">xlab</span>(<span class="st">"Paracou Mean Height Above Nearest Drainage [HAND, m]"</span>) <span class="sc">+</span></span>
-<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ylab</span>(<span class="st">"Ducke Mean HAND [m]"</span>) <span class="sc">+</span></span>
-<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_vline</span>(<span class="at">xintercept =</span> <span class="dv">10</span>, <span class="at">linetype =</span> <span class="st">"dashed"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>m_hand_duc <span class="ot">&lt;-</span> <span class="fu">median</span>(data<span class="sc">$</span>hand_Ducke, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>m_hand_par <span class="ot">&lt;-</span> <span class="fu">median</span>(data<span class="sc">$</span>hand_Paracou, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>data <span class="sc">%&gt;%</span> </span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">label =</span> <span class="fu">ifelse</span>((genus <span class="sc">%in%</span> t<span class="sc">$</span>genus <span class="sc">&amp;&amp;</span> species <span class="sc">%in%</span> t<span class="sc">$</span>species),</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>                        <span class="fu">paste0</span>(<span class="fu">str_sub</span>(genus, <span class="dv">1</span>, <span class="dv">1</span>), <span class="st">". "</span>, species), <span class="st">""</span>)) <span class="sc">%&gt;%</span> </span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(hand_Paracou, hand_Ducke, <span class="at">col =</span> abundance_mean)) <span class="sc">+</span></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_abline</span>() <span class="sc">+</span></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>  ggrepel<span class="sc">::</span><span class="fu">geom_text_repel</span>(<span class="fu">aes</span>(<span class="at">label =</span> label)) <span class="sc">+</span></span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>() <span class="sc">+</span></span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_viridis_c</span>(<span class="st">"Mean</span><span class="sc">\n</span><span class="st">Abundance</span><span class="sc">\n</span><span class="st">[N/ha]"</span>, <span class="at">trans =</span> <span class="st">"log"</span>) <span class="sc">+</span></span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>  ggpubr<span class="sc">::</span><span class="fu">stat_cor</span>() <span class="sc">+</span></span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">xlab</span>(<span class="st">"Paracou Mean HAND [HAND, m]"</span>) <span class="sc">+</span></span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ylab</span>(<span class="st">"Ducke Mean HAND [m]"</span>) <span class="sc">+</span></span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_vline</span>(<span class="at">xintercept =</span> m_hand_par, <span class="at">linetype =</span> <span class="st">"dashed"</span>) <span class="sc">+</span> </span>
+<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> m_hand_duc, <span class="at">linetype =</span> <span class="st">"dashed"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><img src="14_Comparisons_files/figure-html/hand-1.png" class="img-fluid figure-img" width="672"></p>
-<figcaption class="figure-caption">Caption.</figcaption>
+<figcaption class="figure-caption">HAND (m) comparisons for the common species between Ducke and Paracou.</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>57 species are common between Paracou and Ducke with low HAND values and 57 with high HAND values.</p>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggvenn</span>(<span class="fu">list</span>(<span class="st">"Ducke HAND-"</span> <span class="ot">=</span> <span class="fu">filter</span>(ducke, hand <span class="sc">&lt;</span> m_hand_duc)<span class="sc">$</span>scientific, </span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>            <span class="st">"Paracou HAND-"</span> <span class="ot">=</span> <span class="fu">filter</span>(paracou, hand <span class="sc">&lt;</span> m_hand_par)<span class="sc">$</span>scientific, </span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>            <span class="st">"Ducke HAND+"</span> <span class="ot">=</span> <span class="fu">filter</span>(ducke, hand <span class="sc">&gt;=</span> m_hand_duc)<span class="sc">$</span>scientific, </span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>            <span class="st">"Paracou HAND+"</span> <span class="ot">=</span> <span class="fu">filter</span>(paracou, hand <span class="sc">&gt;=</span> m_hand_par)<span class="sc">$</span>scientific))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="14_Comparisons_files/figure-html/venn_hand-1.png" class="img-fluid figure-img" width="672"></p>
+<figcaption class="figure-caption">Shared species across sites and high or low values of HAND (above or below the site median).</figcaption>
 </figure>
 </div>
 </div>
@@ -315,17 +536,220 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="cell">
 <details>
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggvenn</span>(<span class="fu">list</span>(<span class="st">"Ducke HAND&lt;10"</span> <span class="ot">=</span> <span class="fu">filter</span>(ducke, hand <span class="sc">&lt;</span> <span class="dv">10</span>)<span class="sc">$</span>scientific, </span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>            <span class="st">"Paracou HAND&lt;10"</span> <span class="ot">=</span> <span class="fu">filter</span>(paracou, hand <span class="sc">&lt;</span> <span class="dv">10</span>)<span class="sc">$</span>scientific, </span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>            <span class="st">"Ducke HAND&gt;=10"</span> <span class="ot">=</span> <span class="fu">filter</span>(ducke, hand <span class="sc">&gt;=</span> <span class="dv">10</span>)<span class="sc">$</span>scientific, </span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>            <span class="st">"Paracou HAND&gt;=10"</span> <span class="ot">=</span> <span class="fu">filter</span>(paracou, hand <span class="sc">&gt;=</span> <span class="dv">10</span>)<span class="sc">$</span>scientific))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>data <span class="sc">%&gt;%</span> </span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">na.omit</span>() <span class="sc">%&gt;%</span> </span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(hand_Paracou <span class="sc">&gt;</span> m_hand_par, hand_Ducke <span class="sc">&gt;</span> m_hand_duc) <span class="sc">%&gt;%</span> </span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">head</span>() <span class="sc">%&gt;%</span> </span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>  knitr<span class="sc">::</span><span class="fu">kable</span>(<span class="at">caption =</span> <span class="st">"Common species between Paracou and Ducke with high HAND values."</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
-<p><img src="14_Comparisons_files/figure-html/venn_hand-1.png" class="img-fluid" width="672"></p>
+<table class="table table-sm table-striped small">
+<caption>Common species between Paracou and Ducke with high HAND values.</caption>
+<colgroup>
+<col style="width: 13%">
+<col style="width: 9%">
+<col style="width: 11%">
+<col style="width: 12%">
+<col style="width: 14%">
+<col style="width: 8%">
+<col style="width: 10%">
+<col style="width: 7%">
+<col style="width: 11%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">family</th>
+<th style="text-align: left;">genus</th>
+<th style="text-align: left;">species</th>
+<th style="text-align: right;">abundance_Ducke</th>
+<th style="text-align: right;">abundance_Paracou</th>
+<th style="text-align: right;">hand_Ducke</th>
+<th style="text-align: right;">hand_Paracou</th>
+<th style="text-align: right;">hand_mean</th>
+<th style="text-align: right;">abundance_mean</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Peraceae</td>
+<td style="text-align: left;">Pogonophora</td>
+<td style="text-align: left;">schomburgkiana</td>
+<td style="text-align: right;">0.4305556</td>
+<td style="text-align: right;">14.986667</td>
+<td style="text-align: right;">23.30731</td>
+<td style="text-align: right;">11.85</td>
+<td style="text-align: right;">17.57865</td>
+<td style="text-align: right;">7.708611</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Chrysobalanaceae</td>
+<td style="text-align: left;">Hymenopus</td>
+<td style="text-align: left;">heteromorphus</td>
+<td style="text-align: right;">1.4583333</td>
+<td style="text-align: right;">11.200000</td>
+<td style="text-align: right;">26.19164</td>
+<td style="text-align: right;">15.27</td>
+<td style="text-align: right;">20.73082</td>
+<td style="text-align: right;">6.329167</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Arecaceae</td>
+<td style="text-align: left;">Oenocarpus</td>
+<td style="text-align: left;">bacaba</td>
+<td style="text-align: right;">8.3055556</td>
+<td style="text-align: right;">2.869333</td>
+<td style="text-align: right;">27.50384</td>
+<td style="text-align: right;">17.69</td>
+<td style="text-align: right;">22.59692</td>
+<td style="text-align: right;">5.587444</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Sapotaceae</td>
+<td style="text-align: left;">Pradosia</td>
+<td style="text-align: left;">cochlearia</td>
+<td style="text-align: right;">0.1041667</td>
+<td style="text-align: right;">8.138667</td>
+<td style="text-align: right;">26.48321</td>
+<td style="text-align: right;">13.16</td>
+<td style="text-align: right;">19.82161</td>
+<td style="text-align: right;">4.121417</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Chrysobalanaceae</td>
+<td style="text-align: left;">Licania</td>
+<td style="text-align: left;">canescens</td>
+<td style="text-align: right;">0.2777778</td>
+<td style="text-align: right;">5.365333</td>
+<td style="text-align: right;">21.23599</td>
+<td style="text-align: right;">14.34</td>
+<td style="text-align: right;">17.78800</td>
+<td style="text-align: right;">2.821556</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Lecythidaceae</td>
+<td style="text-align: left;">Couratari</td>
+<td style="text-align: left;">multiflora</td>
+<td style="text-align: right;">0.0347222</td>
+<td style="text-align: right;">4.469333</td>
+<td style="text-align: right;">40.75795</td>
+<td style="text-align: right;">13.13</td>
+<td style="text-align: right;">26.94398</td>
+<td style="text-align: right;">2.252028</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>data <span class="sc">%&gt;%</span> </span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">na.omit</span>() <span class="sc">%&gt;%</span> </span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(hand_Paracou <span class="sc">&lt;</span> m_hand_par, hand_Ducke <span class="sc">&lt;</span> m_hand_duc) <span class="sc">%&gt;%</span> </span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">head</span>() <span class="sc">%&gt;%</span> </span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>  knitr<span class="sc">::</span><span class="fu">kable</span>(<span class="at">caption =</span> <span class="st">"Common species between Paracou and Ducke with low HAND values."</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<table class="table table-sm table-striped small">
+<caption>Common species between Paracou and Ducke with low HAND values.</caption>
+<colgroup>
+<col style="width: 11%">
+<col style="width: 10%">
+<col style="width: 9%">
+<col style="width: 13%">
+<col style="width: 15%">
+<col style="width: 9%">
+<col style="width: 10%">
+<col style="width: 8%">
+<col style="width: 12%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">family</th>
+<th style="text-align: left;">genus</th>
+<th style="text-align: left;">species</th>
+<th style="text-align: right;">abundance_Ducke</th>
+<th style="text-align: right;">abundance_Paracou</th>
+<th style="text-align: right;">hand_Ducke</th>
+<th style="text-align: right;">hand_Paracou</th>
+<th style="text-align: right;">hand_mean</th>
+<th style="text-align: right;">abundance_mean</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Arecaceae</td>
+<td style="text-align: left;">Oenocarpus</td>
+<td style="text-align: left;">bataua</td>
+<td style="text-align: right;">6.1250000</td>
+<td style="text-align: right;">12.693333</td>
+<td style="text-align: right;">4.922686</td>
+<td style="text-align: right;">6.635</td>
+<td style="text-align: right;">5.778843</td>
+<td style="text-align: right;">9.409167</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Lecythidaceae</td>
+<td style="text-align: left;">Eschweilera</td>
+<td style="text-align: left;">coriacea</td>
+<td style="text-align: right;">6.6527778</td>
+<td style="text-align: right;">7.242667</td>
+<td style="text-align: right;">17.098348</td>
+<td style="text-align: right;">5.620</td>
+<td style="text-align: right;">11.359174</td>
+<td style="text-align: right;">6.947722</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Burseraceae</td>
+<td style="text-align: left;">Protium</td>
+<td style="text-align: left;">opacum</td>
+<td style="text-align: right;">0.5277778</td>
+<td style="text-align: right;">6.250667</td>
+<td style="text-align: right;">12.741997</td>
+<td style="text-align: right;">5.735</td>
+<td style="text-align: right;">9.238499</td>
+<td style="text-align: right;">3.389222</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Bignoniaceae</td>
+<td style="text-align: left;">Jacaranda</td>
+<td style="text-align: left;">copaia</td>
+<td style="text-align: right;">0.1666667</td>
+<td style="text-align: right;">5.546667</td>
+<td style="text-align: right;">18.579650</td>
+<td style="text-align: right;">9.125</td>
+<td style="text-align: right;">13.852325</td>
+<td style="text-align: right;">2.856667</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Malvaceae</td>
+<td style="text-align: left;">Sterculia</td>
+<td style="text-align: left;">pruriens</td>
+<td style="text-align: right;">0.0972222</td>
+<td style="text-align: right;">4.853333</td>
+<td style="text-align: right;">15.416808</td>
+<td style="text-align: right;">7.840</td>
+<td style="text-align: right;">11.628404</td>
+<td style="text-align: right;">2.475278</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Myristicaceae</td>
+<td style="text-align: left;">Iryanthera</td>
+<td style="text-align: left;">hostmannii</td>
+<td style="text-align: right;">0.2430556</td>
+<td style="text-align: right;">4.480000</td>
+<td style="text-align: right;">16.278763</td>
+<td style="text-align: right;">2.005</td>
+<td style="text-align: right;">9.141882</td>
+<td style="text-align: right;">2.361528</td>
+</tr>
+</tbody>
+</table>
 </div>
 </div>
 
 
+</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
